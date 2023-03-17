@@ -27,9 +27,12 @@ import java.util.TreeMap;
 public class FindKeyWordsInFile {
 	
 	public static ArrayList<String> testList = new ArrayList<String>();
+	private static String OutputFile = "C:\\Users\\Jensen Medeiros\\OneDrive\\Desktop\\CS2210\\Assignment_3\\src\\test2.txt";
+	private static HashMap<String, Boolean> FrequentWords = new HashMap<String, Boolean>();
 	
 	FindKeyWordsInFile(String dictionaryTest, Integer k, String MostFrequentEnglishWords) throws IOException{
 		ArrayList<String> dummyList = DictonaryOrganizer(dictionaryTest);
+		HashMap<String, Boolean> mostFrequentWords = MostFrequentWordsOragnizer(MostFrequentEnglishWords);
 		AVLTree testAvl = new AVLTree();
 		AVLTree.Node rootNode = null;
 	    ArrayList<String> testList = new ArrayList<String>();
@@ -48,10 +51,12 @@ public class FindKeyWordsInFile {
 	        sorted.putAll(dummyMap);
 	        int i = 0;
 	        for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
-	        		PrintWriter out = new PrintWriter(new FileWriter(MostFrequentEnglishWords, true), true);
-	        		  out.write(entry.getKey() + " " + entry.getValue() + "\n");
-        		      out.close();
-	        		testList.add(entry.getKey() + " " + entry.getValue());
+	        		PrintWriter out = new PrintWriter(new FileWriter(OutputFile, true), true);
+	        		if(FrequentWords.get(entry.getKey()) == null) {
+	        			out.write(entry.getKey() + " " + entry.getValue() + "\n");
+	        		    out.close();
+		        		testList.add(entry.getKey() + " " + entry.getValue());
+	        		}
 	        }
 	        
 	        // sorts by value
@@ -59,9 +64,11 @@ public class FindKeyWordsInFile {
 	        
 	        //writes to file
 	        try {
-	            FileWriter myWriter = new FileWriter(MostFrequentEnglishWords);
+	            FileWriter myWriter = new FileWriter(OutputFile);
 		        for(int p = 0; p <= k; p++) {
-		        	myWriter.write(testList.get(p) + "\n");
+		        	if(p < testList.size()) {
+		        		myWriter.write(testList.get(p) + "\n");
+		        	}
 		        }
 	            myWriter.close();
 	          } catch (IOException e) {
@@ -156,6 +163,45 @@ public class FindKeyWordsInFile {
 		
 	}
     
+    
+    
+	// private helper MostFrequentWords organizer
+    private static HashMap<String, Boolean> MostFrequentWordsOragnizer(String dictionary) {
+		
+    	
+		try {
+			int id = 1;
+			File myObj = new File(dictionary);
+			Scanner myReader = new Scanner(myObj);
+			while (myReader.hasNext()) {
+				String data = myReader.next();
+				
+				
+				// Remove commas from word
+				int testData = data.indexOf(",");
+				// if comma is found then remove it and add to dictionary
+				if(testData == -1) {
+					FrequentWords.put(data.toLowerCase(), true);
+					id ++;	
+				}
+				else {
+					String newData = data.replace(",", "");
+					FrequentWords.put(newData.toLowerCase(), true);
+					id ++;		
+				}	
+				
+			}
+			myReader.close();
+		}catch(FileNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		
+		return FrequentWords;
+		
+		
+		
+	}
     
 
  // An AVL tree implementation
@@ -327,8 +373,14 @@ public class FindKeyWordsInFile {
         }else {
         	System.out.println("Please input a dictionary file and file to check");
         }
-		Integer k = Integer.parseInt(ktoInt);
-		FindKeyWordsInFile test = new FindKeyWordsInFile(file, k, MostFrequentEnglishWords);
+		if(ktoInt != null) {
+			Integer k = Integer.parseInt(ktoInt);
+			FindKeyWordsInFile test = new FindKeyWordsInFile(file, k, MostFrequentEnglishWords);
+		}else {
+			System.out.println("Please enter a valid integer value for k");
+		}
+		
+		
 		
 	}
 

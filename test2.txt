@@ -1,3 +1,0 @@
-cat 3
-dog 1
-hello 1
