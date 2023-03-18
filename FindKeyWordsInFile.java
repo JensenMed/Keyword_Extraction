@@ -29,9 +29,11 @@ public class FindKeyWordsInFile {
 	
 	public static ArrayList<String> testList = new ArrayList<String>();
 	private static String OutputFile = "C:\\Users\\Jensen Medeiros\\OneDrive\\Desktop\\CS2210\\Assignment_3\\src\\test2.txt";
-	private static HashMap<String, Boolean> FrequentWords = new HashMap<String, Boolean>();
+	public static HashMap<String, Boolean> FrequentWords = new HashMap<String, Boolean>();
+	public static HashMap<String, Boolean> errorMap = new HashMap<String, Boolean>();
 	
 	FindKeyWordsInFile(String dictionaryTest, Integer k, String MostFrequentEnglishWords) throws IOException{
+		
 		ArrayList<String> dummyList = DictonaryOrganizer(dictionaryTest);
 		HashMap<String, Boolean> mostFrequentWords = MostFrequentWordsOragnizer(MostFrequentEnglishWords);
 		AVLTree testAvl = new AVLTree();
@@ -39,8 +41,7 @@ public class FindKeyWordsInFile {
 	    ArrayList<String> testList = new ArrayList<String>();
 	    TreeMap<String, Integer> sorted = new TreeMap<>();
 		
-		
-		
+	
 		 // displaying the occurrence of elements in the arraylist
 		 	Map<String, Integer> dummyMap = new HashMap<String, Integer>();
 	        for (String i : dummyList) {
@@ -66,7 +67,7 @@ public class FindKeyWordsInFile {
 	        //writes to file
 	        try {
 	            FileWriter myWriter = new FileWriter(OutputFile);
-		        for(int p = 0; p <= k; p++) {
+		        for(int p = 0; p < k; p++) {
 		        	if(p < testList.size()) {
 		        		myWriter.write(testList.get(p) + "\n");
 		        	}
@@ -129,7 +130,7 @@ public class FindKeyWordsInFile {
 	
 	
 	// private helper dictionary organizer
-    private static ArrayList<String> DictonaryOrganizer(String dictionary) {
+    public static ArrayList<String> DictonaryOrganizer(String dictionary) {
 		
 		try {
 			int id = 1;
@@ -137,7 +138,6 @@ public class FindKeyWordsInFile {
 			Scanner myReader = new Scanner(myObj);
 			while (myReader.hasNext()) {
 				String data = myReader.next();
-				
 				
 				// Remove commas from word
 				int testData = data.indexOf(",");
@@ -155,7 +155,9 @@ public class FindKeyWordsInFile {
 			}
 			myReader.close();
 		}catch(FileNotFoundException e) {
-			System.out.println(e);
+			errorMap.put("Error. File not found", true);
+			System.out.println("Error. File not found");
+			
 		}
 		
 		return testList;
@@ -167,7 +169,7 @@ public class FindKeyWordsInFile {
     
     
 	// private helper MostFrequentWords organizer
-    private static HashMap<String, Boolean> MostFrequentWordsOragnizer(String dictionary) {
+    public static HashMap<String, Boolean> MostFrequentWordsOragnizer(String dictionary) {
 		
     	
 		try {
@@ -194,7 +196,8 @@ public class FindKeyWordsInFile {
 			}
 			myReader.close();
 		}catch(FileNotFoundException e) {
-			System.out.println(e);
+			errorMap.put("Error. File not found", true);
+			System.out.println("Error. File not found");
 		}
 		
 		
@@ -374,13 +377,14 @@ public class FindKeyWordsInFile {
         }else {
         	System.out.println("Please input a dictionary file and file to check");
         }
+
 		if(ktoInt != null) {
 			Integer k = Integer.parseInt(ktoInt);
 			FindKeyWordsInFile test = new FindKeyWordsInFile(file, k, MostFrequentEnglishWords);
 		}else {
 			System.out.println("Please enter a valid integer value for k");
 		}
-		
+
 		
 		
 	}

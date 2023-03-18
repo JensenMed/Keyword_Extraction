@@ -1,5 +1,5 @@
 10000 1
-a 3
 accomplishment. 1
-and 1
-as 2
+apricot 4
+banana 4
+berry 4
